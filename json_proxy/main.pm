@@ -21,10 +21,10 @@ sub crawl_update {
 	
 	get($url . "/startcrawl")
 		or die "Unable to fetch $url/startcrawl";
+        print_log($url);
 
-	my $i = 0;
 	while (my $doc_raw = get("$url/nextdoc")) {
-		$i++;
+                print_log($url);
 		my $doc = JSON::XS->new->decode($doc_raw)
 			or warn "unable to json decode doc: $doc_raw";
 	
@@ -34,7 +34,16 @@ sub crawl_update {
 			$doc->{url}, $doc->{last_modified}, $doc->{size});
 		
 		$self->add_document(%{$doc});
+                print_log($url);
 	}
+}
+
+sub print_log {
+   my $url = shift;
+   my $log = get($url . "/log")
+	or warn "Unable to fetch $url/log";
+  
+   print "$_\n" for JSON::XS->new->decode($log);
 }
 
 sub path_access {
