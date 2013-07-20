@@ -76,8 +76,7 @@ get '/nextdoc' => sub {
 get '/log' => sub {
     my @cpy = @to-log;
     @to-log = ();
-    return @cpy;
-
+    return to-json(@cpy);
 }
 
 baile;
